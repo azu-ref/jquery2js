@@ -20,10 +20,25 @@ fetch('https://randomuser.me/api/sdfsdfsdf')
     })
     .catch(function (error){
         console.log(`Algo fallo: ${error}`)
-    })
+    });
 
 
 //por defecto fecth usa el metodo get
 //ya que no es necesario pasarle
 //parametros de configuracion
+
+//---------------------FUNCIONES ASINCRONAS---------------------------//
+
+(async function load() {
+    async function getData(url) {
+        const response = await fetch(url)
+        const data = await response.json()
+        return data.data.movies
+    }
+
+    const actionList = await getData('https://yts.am/api/v2/list_movies.json?genre=action')
+    const dramaList = await getData('https://yts.am/api/v2/list_movies.json?genre=drama')
+    const animationnList = await getData('https://yts.am/api/v2/list_movies.json?genre=animation')
+    console.log(actionList, dramaList, animationnList)
+})()
 
