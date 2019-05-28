@@ -36,6 +36,11 @@
         return data.data.movies
     }
 
+    const $form = document.getElementById('form')
+    $form.addEventListener('submit', (event) => {
+        event.preventDefault()
+    })
+
     const actionList = await getData('https://yts.am/api/v2/list_movies.json?genre=action')
     const dramaList = await getData('https://yts.am/api/v2/list_movies.json?genre=drama')
     const animationList = await getData('https://yts.am/api/v2/list_movies.json?genre=animation')
@@ -59,14 +64,26 @@
         )
     }
 
+    function addEventClick($element){
+        $element.addEventListener('click', () => {
+            alert('click')
+        })
+    }
+
     function renderMovieList(movieList, $container){
         $container.children[0].remove()
         movieList.forEach(element => {
             const htmlString = videoItemTemplate(element)
-            $container.innerHTML += htmlString    
+            $container.innerHTML += htmlString              
             //console.log(htmlString)
-        });        
-    }
+        })
+        // console.log($container.children)
+        // console.log(movieList)
+
+       for(children of $container.children){
+           addEventClick(children)
+       }
+    }    
 
     renderMovieList(actionList, $actionContainer)
     renderMovieList(dramaList, $dramaContainer)
@@ -79,7 +96,7 @@
     //-------------------SELECTORES---------------------------------------///
     //-------------------SELECTORES---------------------------------------///
     const $featuringContainer = document.getElementById('featuring')
-    const $form = document.getElementById('form')
+    
     const $home = document.getElementById('home')
     
 
