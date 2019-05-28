@@ -40,6 +40,10 @@
     const dramaList = await getData('https://yts.am/api/v2/list_movies.json?genre=drama')
     const animationnList = await getData('https://yts.am/api/v2/list_movies.json?genre=animation')
     //console.log(actionList, dramaList, animationnList)
+    
+    const $actionContainer = document.getElementById('action')
+    const $dramaContainer = document.getElementById('drama')
+    const $animationContainer = document.getElementById('animation')
 
     function videoItemTemplate(movie) {
         return (
@@ -57,13 +61,12 @@
 
     actionList.forEach(element => {
         const htmlString = videoItemTemplate(element)
-        console.log(htmlString)
+        $actionContainer.innerHTML += htmlString
+
+        //console.log(htmlString)
     });
 
     //-------------------SELECTORES---------------------------------------///
-    const $actionContainer = document.getElementById('action')
-    const $dramaContainer = document.getElementById('drama')
-    const $animationContainer = document.getElementById('animation')
     const $featuringContainer = document.getElementById('featuring')
     const $form = document.getElementById('form')
     const $home = document.getElementById('home')
