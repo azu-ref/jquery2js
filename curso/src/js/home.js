@@ -39,6 +39,7 @@
     const $home = document.getElementById('home')
     const $featuringContainer = document.getElementById('featuring')
 
+    //creacion de funcion para agregar atributos a un nuevo elemento creado en el html
     function setAttributes($element, attributes) {
         for (const attribute in attributes) {
           $element.setAttribute(attribute, attributes[attribute]);
@@ -49,6 +50,7 @@
     $form.addEventListener('submit', (event) => {
         event.preventDefault()
         $home.classList.add('search-active')
+        //creando elemento html y guardando en una constante
         const $loader = document.createElement('img');
         setAttributes($loader, {
             src: 'src/images/loader.gif',
