@@ -90,9 +90,9 @@
     const $dramaContainer = document.getElementById('drama')
     const $animationContainer = document.getElementById('animation')
 
-    function videoItemTemplate(movie) {
+    function videoItemTemplate(movie, category) {
         return (
-            `<div class="primaryPlaylistItem">
+            `<div class="primaryPlaylistItem" data-id="${movie.id}" data-category="${category}">
                 <div class="primaryPlaylistItem-image">
                 <img src="${movie.medium_cover_image}">
                 </div>
@@ -107,14 +107,14 @@
     function addEventClick($element){
         $element.addEventListener('click', () => {
             //alert('click')
-            showModal()
+            showModal($element)
         })
     }
 
-    function renderMovieList(movieList, $container){
+    function renderMovieList(movieList, $container, category){
         $container.children[0].remove()
-        movieList.forEach(element => {
-            const htmlString = videoItemTemplate(element)
+        movieList.forEach(movie => {
+            const htmlString = videoItemTemplate(movie, category)
             $container.innerHTML += htmlString              
             //console.log(htmlString)
         })
@@ -126,9 +126,9 @@
        }
     }    
 
-    renderMovieList(actionList, $actionContainer)
-    renderMovieList(dramaList, $dramaContainer)
-    renderMovieList(animationList, $animationContainer)
+    renderMovieList(actionList, $actionContainer, 'action')
+    renderMovieList(dramaList, $dramaContainer, 'drama')
+    renderMovieList(animationList, $animationContainer, 'animation')
     
     
     
@@ -149,9 +149,13 @@
     const $modalImage = $modal.querySelector('img')
     const $modalDescription = $modal.querySelector('p')
 
-    function showModal(){
+    function showModal($element){
         $overlay.classList.add('active')
         $modal.style.animation = 'modalIn .8s forwards'
+
+        const id = $element.dataset.id
+        const category = $element.dataset.category
+        
     }
 
     $hideModal.addEventListener('click', () => {
