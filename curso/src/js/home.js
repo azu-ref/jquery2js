@@ -149,13 +149,36 @@
     const $modalImage = $modal.querySelector('img')
     const $modalDescription = $modal.querySelector('p')
 
+    function findById(list, id) {
+        return list.find((element) => element.id === parseInt(id, 10))
+    }
+    function findMovie(id, category) {
+        switch(category){
+            case 'action':{
+                return findById(actionList, id)
+
+            }
+            case 'drama':{
+                return findById(dramaList, id)
+            }
+            default:{
+                return findById(animationList, id)
+            }
+        }
+    }
+
     function showModal($element){
         $overlay.classList.add('active')
         $modal.style.animation = 'modalIn .8s forwards'
 
         const id = $element.dataset.id
         const category = $element.dataset.category
+        const dataPeli = findMovie(id, category)
         
+        $modalTitle.textContent = dataPeli.title
+        $modalDescription.textContent = dataPeli.description_full
+        $modalImage.setAttribute('src', dataPeli.medium_cover_image)
+
     }
 
     $hideModal.addEventListener('click', () => {
