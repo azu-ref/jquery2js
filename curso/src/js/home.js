@@ -33,7 +33,12 @@
     async function getData(url) {
         const response = await fetch(url)
         const data = await response.json()
-        return data.data.movies
+        if(data.data.movie_count > 0){
+            return data.data.movies
+            
+        }
+
+        throw new Error('No se encontro ningun resultado')
     }
 
     const $home = document.getElementById('home')
@@ -74,22 +79,27 @@
         $featuringContainer.append($loader);
 
         const data = new FormData($form)
-        const peli = await getData(`${BASE_URL}list_movies.json?limit=1&query_term=${data.get('name')}`)
-        const HTMLString = featuringTemplate(peli[0])
-       
 
-        $featuringContainer.innerHTML = HTMLString
+        try {
+            const peli = await getData(`${BASE_URL}list_movies.json?limit=1&query_term=${data.get('name')}`)
+            const HTMLString = featuringTemplate(peli[0])
+            $featuringContainer.innerHTML = HTMLString
+            
+        } catch (error) {
+            alert(error.message)
+            $loader.remove()
+            $home.classList.remove('search-active')
+        }
     })
 
-    const actionList = await getData(`${BASE_URL}list_movies.json?genre=action`)
-    const dramaList = await getData(`${BASE_URL}list_movies.json?genre=drama`)
-    const animationList = await getData(`${BASE_URL}list_movies.json?genre=animation`)
+    
+    
     //console.log(actionList, dramaList, animationnList)
     
     const $actionContainer = document.getElementById('action')
     const $dramaContainer = document.getElementById('drama')
     const $animationContainer = document.getElementById('animation')
-
+    
     function videoItemTemplate(movie, category) {
         return (
             `<div class="primaryPlaylistItem" data-id="${movie.id}" data-category="${category}">
@@ -99,8 +109,8 @@
                 <h4 class="primaryPlaylistItem-title">
                 ${movie.title}
                 </h4>
-            </div>`
-            
+                </div>`
+                
         )
     }
 
@@ -111,23 +121,38 @@
         })
     }
 
+    function createTemplate(HTMLString) {
+        const html = document.implementation.createHTMLDocument();
+        html.body.innerHTML = HTMLString;
+        return html.body.children[0];
+    }
+    
     function renderMovieList(movieList, $container, category){
         $container.children[0].remove()
         movieList.forEach(movie => {
             const htmlString = videoItemTemplate(movie, category)
-            $container.innerHTML += htmlString              
+            const movieElement = createTemplate(htmlString)
+            $container.append(movieElement)
+            const image = movieElement.querySelector('img')
+            image.addEventListener('load', () => {
+                image.classList.add('fadeIn')
+                
+            })
             //console.log(htmlString)
+            addEventClick(movieElement)
         })
         // console.log($container.children)
         // console.log(movieList)
-
-       for(children of $container.children){
-           addEventClick(children)
-       }
+        
     }    
-
+    
+    const actionList = await getData(`${BASE_URL}list_movies.json?genre=action`)
     renderMovieList(actionList, $actionContainer, 'action')
+
+    const dramaList = await getData(`${BASE_URL}list_movies.json?genre=drama`)
     renderMovieList(dramaList, $dramaContainer, 'drama')
+
+    const animationList = await getData(`${BASE_URL}list_movies.json?genre=animation`)
     renderMovieList(animationList, $animationContainer, 'animation')
     
     
