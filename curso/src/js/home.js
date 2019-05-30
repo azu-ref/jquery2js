@@ -144,15 +144,28 @@
         // console.log($container.children)
         // console.log(movieList)
         
-    }    
+    } 
+
+    async function cacheExist(category) {
+        const listName = `${category}List`;
+        const cacheList = window.localStorage.getItem(listName);
     
-    const actionList = await getData(`${BASE_URL}list_movies.json?genre=action`)
+        if (cacheList)
+        return JSON.parse(cacheList);
+        
+        const data = await getData(`${BASE_URL}list_movies.json?genre=${category}`);
+        window.localStorage.setItem(listName, JSON.stringify(data));
+        return data;
+    }   
+    
+    const actionList = await cacheExist('action')
+    //window.localStorage.setItem('actionList', JSON.stringify(actionList))
     renderMovieList(actionList, $actionContainer, 'action')
 
-    const dramaList = await getData(`${BASE_URL}list_movies.json?genre=drama`)
+    const dramaList = await cacheExist('drama')
     renderMovieList(dramaList, $dramaContainer, 'drama')
 
-    const animationList = await getData(`${BASE_URL}list_movies.json?genre=animation`)
+    const animationList = await cacheExist('animation')
     renderMovieList(animationList, $animationContainer, 'animation')
     
     
